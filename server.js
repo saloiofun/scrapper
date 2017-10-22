@@ -37,11 +37,12 @@ app.get("/scrape", function (req, res) {
     axios.get("https://gizmodo.com/").then(function (response) {
         var $ = cheerio.load(response.data);
 
-        $("h1.headline entry-title js_entry-title").each(function (i, element) {
+        $("article").each(function (i, element) {
             var result = {};
 
-            result.title = $(this).children("a").text();
-            result.link = $(this).children("a").attr("href");
+            result.title = $(this).children("header").children("h1").children("a").text();
+            result.link = $(this).children("header").children("h1").children("a").attr("href");
+            result.summary = $(this).children("div .item__content").children("div .entry-summary").children("p").text();
 
             db.Article.create(result).then(function (dbArticle) {
                 res.send("scrape Complete");
@@ -50,6 +51,21 @@ app.get("/scrape", function (req, res) {
             });
         });
     });
+});
+
+// Route for getting all Articles from the db
+app.get("/articles", function (req, res) {
+    // Grab every document in the Articles collection
+    db.Article
+        .find({})
+        .then(function (dbArticle) {
+            // If we were able to successfully find Articles, send them back to the client
+            res.json(dbArticle);
+        })
+        .catch(function (err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+        });
 });
 
 app.get("/articles/:id", function (req, res) {
