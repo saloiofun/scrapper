@@ -69,6 +69,10 @@ body {
   margin-top: 1.5rem;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 
 /* Responsive: Portrait tablets and up */
 

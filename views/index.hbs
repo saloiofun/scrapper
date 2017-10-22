@@ -1,0 +1,12 @@
+{{#each articles }}
+<div class="card w-100 mb-3">
+    <h4 class="card-header">
+        <a href="{{link}}">{{title}}</a>
+    </h4>
+    <div class="card-body">
+        <p class="card-text">{{summary}}</p>
+        <a href="{{link}}" class="btn btn-primary">View Article</a>
+        <button class="btn btn-warning ml-1" data-id="{{_id}}" id="saveArticle">Save Article</button>
+    </div>
+</div>
+{{/each}}

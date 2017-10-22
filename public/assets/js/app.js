@@ -1,24 +1,20 @@
-$.getJSON("/articles", function (data) {
-    for (var i = 0; i < data.length; i++) {
-        {
-            var card = $('<div class="card w-100 mb-3">');
-            var cardTitleLink = $('<a href=' + data[i].link + '>');
-            var cardTitle = $('<h4 class="card-header">');
-            cardTitleLink.text(data[i].title);
-            cardTitle.append(cardTitleLink);
+// When you click the saveArticle button
+$(document).on("click", "#saveArticle", function () {
+    // Grab the id associated with the article from the submit button
+    var thisId = $(this).attr("data-id");
 
-            var cardBody = $('<div class="card-body">');
-            var cardText = $('<p class="card-text">');
-            cardText.text(data[i].summary);
-            cardBody.append(cardText);
+    // Run a POST request to change the note, using what's entered in the inputs
+    $.ajax({
+            method: "POST",
+            url: "/save/" + thisId,
+        })
+        // With that done
+        .done(function (data) {
+            // Reload Page
+            location.reload();
+        });
 
-            var cardLink = $('<a href=' + data[i].link + ' class="btn btn-primary">View Article</a>');
-            cardBody.append(cardLink);
-
-            card.append(cardTitle);
-            card.append(cardBody);
-
-            $('.articles').append(card);
-        }
-    }
+    // Also, remove the values entered in the input and textarea for note entry
+    $("#titleinput").val("");
+    $("#bodyinput").val("");
 });
