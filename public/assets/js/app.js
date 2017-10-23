@@ -4,26 +4,19 @@ $(document).on("click", "#articles-scraper", function () {
             method: "GET",
             url: "/scrape/"
         })
-        // With that done
         .done(function (data) {
-            // Reload Page
             location.reload();
         });
 });
 
 // When you click the save-article button
 $(".save-article").on("click", function () {
-    // Grab the id associated with the article from the submit button
     var thisId = $(this).attr("data-id");
-
-    // Run a POST request to change the note, using what's entered in the inputs
     $.ajax({
             method: "POST",
             url: "/save/" + thisId
         })
-        // With that done
         .done(function (data) {
-            // Reload Page
             bootbox.alert({
                 message: "Article Saved!",
                 backdrop: true
@@ -49,14 +42,8 @@ $(".note-article").on("click", function () {
                             body: result
                         }
                     })
-                    // With that done
                     .done(function (data) {
-                        if (result) {
-                            bootbox.alert({
-                                message: "Note Saved!",
-                                backdrop: true
-                            });
-                        }
+                        location.reload();
                     });
             }
         }

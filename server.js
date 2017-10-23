@@ -43,19 +43,37 @@ mongoose.connect("mongodb://localhost/webScrapper", {
 app.get("/scrape", function (req, res) {
     axios.get("https://gizmodo.com/").then(function (response) {
         var $ = cheerio.load(response.data);
-        $("article").each(function (i, element) {
-            var result = {};
 
-            result.title = $(this).children("header").children("h1").children("a").text();
-            result.link = $(this).children("header").children("h1").children("a").attr("href");
-            result.summary = $(this).children("div .item__content").children("div .entry-summary").children("p").text();
+        mongoose.connection.db.listCollections({
+                name: 'articles'
+            })
+            .next(function (err, collinfo) {
+                $("article").each(function (i, element) {
+                    var result = {};
+                    result.title = $(this).children("header").children("h1").children("a").text();
+                    result.link = $(this).children("header").children("h1").children("a").attr("href");
+                    result.summary = $(this).children("div .item__content").children("div .entry-summary").children("p").text();
 
-            db.Article.create(result).then(function (dbArticle) {
-                res.send("scrape Complete");
-            }).catch(function (err) {
-                res.json(err);
+                    if (collinfo) {
+                        db.Article.update(result, result, {
+                            upsert: true,
+                            runValidators: true
+                        }).then(function (dbArticle) {
+                            //res.send("scrape Complete");
+                        }).catch(function (err) {
+                            res.json(err);
+                        });
+
+                    } else {
+                        db.Article.create(result).then(function (dbArticle) {
+                            //res.send("scrape Complete");
+                        }).catch(function (err) {
+                            res.json(err);
+                        });
+
+                    }
+                });
             });
-        });
     });
 });
 
