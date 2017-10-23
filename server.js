@@ -43,7 +43,6 @@ mongoose.connect("mongodb://localhost/webScrapper", {
 app.get("/scrape", function (req, res) {
     axios.get("https://gizmodo.com/").then(function (response) {
         var $ = cheerio.load(response.data);
-
         $("article").each(function (i, element) {
             var result = {};
 
@@ -61,7 +60,7 @@ app.get("/scrape", function (req, res) {
 });
 
 // Route for getting all Articles from the db
-app.get("/articles", function (req, res) {
+app.get("/", function (req, res) {
     // Grab every document in the Articles collection
     db.Article
         .find({})
@@ -124,7 +123,26 @@ app.post("/save/:id", function (req, res) {
     });
 });
 
-app.post("/articles/:id", function (req, res) {
+// Route for grabbing a note
+app.get("/saved/note/:id", function (req, res) {
+    // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
+    db.Article
+        .findOne({
+            _id: req.params.id
+        })
+        // ..and populate all of the notes associated with it
+        .populate("note")
+        .then(function (dbArticle) {
+            // If we were able to successfully find an Article with the given id, send it back to the client
+            res.json(dbArticle);
+        })
+        .catch(function (err) {
+            // If an error occurred, send it to the client
+            res.json(err);
+        });
+});
+
+app.post("/note/:id", function (req, res) {
     db.Note.create(req.body).then(function (dbNote) {
         return db.Article.findOneAndUpdate({
             _id: req.params.id

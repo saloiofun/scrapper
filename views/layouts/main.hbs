@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Web Scrapper</title>
+    <title>Web Scraper</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -20,25 +20,25 @@
             <nav>
                 <ul class="nav nav-pills float-right">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Home
+                        <a id="view-articles" class="nav-link" href="/">Home
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Saved Articles</a>
+                        <a id="view-saved" class="nav-link" href="saved">Saved Articles</a>
                     </li>
                 </ul>
             </nav>
-            <h3 class="text-muted">Mongo Scrapper</h3>
+            <h3 class="text-muted">Gizmodo Scraper</h3>
         </header>
 
         <main role="main">
 
             <div class="jumbotron">
-                <h1 class="display-3">Web Scrapper</h1>
-                <p class="lead">A web app that lets users view and leave comments on the latest news.</p>
+                <h1 class="display-3">Gizmodo Scraper</h1>
+                <p class="lead">A web app that lets users view and leave comments on the latest news from Gizmodo.</p>
                 <p>
-                    <a class="btn btn-lg btn-success" href="#" role="button">Scrap New Articles!</a>
+                    <button id="articles-scraper" class="btn btn-lg btn-success">Scrap New Articles!</button>
                 </p>
             </div>
 
@@ -64,6 +64,7 @@
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <script src="assets/js/app.js">
     </script>
 </body>

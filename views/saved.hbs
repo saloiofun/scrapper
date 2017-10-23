@@ -6,6 +6,10 @@
     <div class="card-body">
         <p class="card-text">{{summary}}</p>
         <a href="{{link}}" class="btn btn-primary">View Article</a>
+        <button class="note-article btn btn-warning ml-1" data-id="{{_id}}">Add Note</button>
+        {{#if note}}
+        <button class="view-note btn btn-info ml-1" data-id="{{_id}}">View Note</button>
+        {{/if}}
     </div>
 </div>
 {{/each}}
