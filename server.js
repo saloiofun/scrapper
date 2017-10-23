@@ -34,7 +34,8 @@ app.use(bodyParser.urlencoded({
 app.use(express.static("public"));
 
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/webScrapper", {
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/webScrapper";
+mongoose.connect(MONGODB_URI, {
     useMongoClient: true
 });
 
