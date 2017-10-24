@@ -46,9 +46,9 @@ app.get("/scrape", function (req, res) {
         var $ = cheerio.load(response.data);
 
         mongoose.connection.db.listCollections({
-                name: 'articles'
-            })
-            .next(function (err, collinfo) {
+            name: 'articles'
+        }).next(function (err, collinfo) {
+            if (collinfo) {
                 $("article").each(function (i, element) {
                     var result = {};
                     result.title = $(this).children("header").children("h1").children("a").text();
@@ -56,62 +56,62 @@ app.get("/scrape", function (req, res) {
                     result.date = $(this).children("header").children("div .meta--pe").children("div .meta__container").children("time").attr("datetime");
                     result.summary = $(this).children("div .item__content").children("div .entry-summary").children("p").text();
 
-                    if (collinfo) {
-                        db.Article.update(result, result, {
-                            upsert: true,
-                            runValidators: true
-                        }).then(function (dbArticle) {
-                            //res.send("scrape Complete");
-                        }).catch(function (err) {
-                            res.json(err);
-                        });
-
-                    } else {
-                        db.Article.create(result).then(function (dbArticle) {
-                            //res.send("scrape Complete");
-                        }).catch(function (err) {
-                            res.json(err);
-                        });
-
-                    }
+                    db.Article.update(result, result, {
+                        upsert: true,
+                        runValidators: true
+                    }).then(function (dbArticle) {
+                        //res.send("scrape Complete");
+                    }).catch(function (err) {
+                        res.json(err);
+                    });
                 });
-            });
+
+            } else {
+                $("article").each(function (i, element) {
+                    var result = {};
+                    result.title = $(this).children("header").children("h1").children("a").text();
+                    result.link = $(this).children("header").children("h1").children("a").attr("href");
+                    result.date = $(this).children("header").children("div .meta--pe").children("div .meta__container").children("time").attr("datetime");
+                    result.summary = $(this).children("div .item__content").children("div .entry-summary").children("p").text();
+
+                    db.Article.create(result).then(function (dbArticle) {
+                        //res.send("scrape Complete");
+                    }).catch(function (err) {
+                        res.json(err);
+                    });
+                });
+
+            }
+        });
     });
 });
 
 // Route for getting all Articles from the db
 app.get("/", function (req, res) {
-    db.Article
-        .find({})
-        .sort({
-            "date": -1
-        })
-        .then(function (dbArticle) {
-            res.render("index", {
-                articles: dbArticle
-            });
-        })
-        .catch(function (err) {
-            res.json(err);
+    db.Article.find({}).sort({
+        "date": -1
+    }).then(function (dbArticle) {
+        res.render("index", {
+            articles: dbArticle
         });
+    }).catch(function (err) {
+        res.json(err);
+    });
 });
 
 // Route for getting all Saved Articles from the db
 app.get("/saved", function (req, res) {
-    db.Article
-        .find({
-            saveArticle: {
-                $exists: true
-            }
-        })
-        .then(function (dbArticle) {
-            res.render("saved", {
-                savedArticles: dbArticle
-            });
-        })
-        .catch(function (err) {
-            res.json(err);
+    db.Article.find({
+        saveArticle: {
+            $exists: true
+        }
+    }).then(function (dbArticle) {
+        res.render("saved", {
+            savedArticles: dbArticle
         });
+    }).catch(function (err) {
+        res.json(err);
+    });
 });
 
 app.get("/articles/:id", function (req, res) {
@@ -142,17 +142,13 @@ app.post("/save/:id", function (req, res) {
 
 // Route for grabbing a note
 app.get("/saved/note/:id", function (req, res) {
-    db.Article
-        .findOne({
-            _id: req.params.id
-        })
-        .populate("note")
-        .then(function (dbArticle) {
-            res.json(dbArticle);
-        })
-        .catch(function (err) {
-            res.json(err);
-        });
+    db.Article.findOne({
+        _id: req.params.id
+    }).populate("note").then(function (dbArticle) {
+        res.json(dbArticle);
+    }).catch(function (err) {
+        res.json(err);
+    });
 });
 
 app.post("/note/:id", function (req, res) {
