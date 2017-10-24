@@ -53,6 +53,7 @@ app.get("/scrape", function (req, res) {
                     var result = {};
                     result.title = $(this).children("header").children("h1").children("a").text();
                     result.link = $(this).children("header").children("h1").children("a").attr("href");
+                    result.date = $(this).children("header").children("div .meta--pe").children("div .meta__container").children("time").attr("datetime");
                     result.summary = $(this).children("div .item__content").children("div .entry-summary").children("p").text();
 
                     if (collinfo) {
@@ -82,6 +83,9 @@ app.get("/scrape", function (req, res) {
 app.get("/", function (req, res) {
     db.Article
         .find({})
+        .sort({
+            "date": -1
+        })
         .then(function (dbArticle) {
             res.render("index", {
                 articles: dbArticle
