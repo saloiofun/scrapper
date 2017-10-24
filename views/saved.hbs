@@ -1,11 +1,11 @@
 {{#each savedArticles }}
 <div class="card w-100 mb-3">
     <h4 class="card-header">
-        <a href="{{link}}">{{title}}</a>
+        <a href="{{link}}" target="_blank">{{title}}</a>
     </h4>
     <div class="card-body">
         <p class="card-text">{{summary}}</p>
-        <a href="{{link}}" class="btn btn-primary">View Article</a>
+        <a href="{{link}}" class="btn btn-primary" target="_blank">View Article</a>
         <button class="note-article btn btn-warning ml-1" data-id="{{_id}}">Add Note</button>
         {{#if note}}
         <button class="view-note btn btn-info ml-1" data-id="{{_id}}">View Note</button>
